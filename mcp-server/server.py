@@ -8,18 +8,19 @@ Self-Improve Module Registry MCP Server
 - install_module: 安装模块到项目路径
 """
 
-import asyncio
 import json
 import shutil
 import sys
-import threading
-from http.server import HTTPServer, BaseHTTPRequestHandler
 from pathlib import Path
 from typing import Any
 
-import mcp.server.stdio
+import uvicorn
 from mcp import types
 from mcp.server import Server
+from mcp.server.sse import SseServerTransport
+from starlette.applications import Starlette
+from starlette.responses import HTMLResponse, JSONResponse
+from starlette.routing import Route
 
 REGISTRY_PATH = Path(__file__).parent.parent / "registry.json"
 MODULES_ROOT = Path(__file__).parent.parent / "modules"
@@ -277,80 +278,71 @@ def _handle_install(module_name: str, target_dir: str) -> list[types.TextContent
     return [types.TextContent(type="text", text="\n".join(result_parts))]
 
 
-DASHBOARD_PORT = 9475
+MCP_PORT = 9475
 DASHBOARD_HTML_PATH = Path(__file__).parent / "dashboard.html"
 
-
-class DashboardHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        if self.path == "/":
-            self._serve_html()
-        elif self.path == "/api/stats":
-            self._serve_stats()
-        else:
-            self.send_error(404)
-
-    def _serve_html(self):
-        if not DASHBOARD_HTML_PATH.exists():
-            self.send_error(500, "dashboard.html not found")
-            return
-        html = DASHBOARD_HTML_PATH.read_bytes()
-        self.send_response(200)
-        self.send_header("Content-Type", "text/html; charset=utf-8")
-        self.end_headers()
-        self.wfile.write(html)
-
-    def _serve_stats(self):
-        registry = load_registry()
-        stats = load_stats()
-        install_counts: dict[str, int] = {}
-        for record in stats.get("installs", []):
-            name = record["module"]
-            install_counts[name] = install_counts.get(name, 0) + 1
-
-        modules = []
-        for entry in registry:
-            modules.append({
-                "name": entry["name"],
-                "type": entry["type"],
-                "lang": entry["lang"],
-                "summary": entry.get("summary", ""),
-                "tags": entry.get("tags", []),
-                "installs": install_counts.get(entry["name"], 0),
-            })
-
-        data = {
-            "total_modules": len(registry),
-            "total_installs": len(stats.get("installs", [])),
-            "modules": modules,
-        }
-        body = json.dumps(data, ensure_ascii=False, indent=2).encode("utf-8")
-        self.send_response(200)
-        self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.end_headers()
-        self.wfile.write(body)
-
-    def log_message(self, format, *args):
-        pass
+# --- SSE transport ---
+sse = SseServerTransport("/messages/")
 
 
-def start_dashboard_server():
-    httpd = HTTPServer(("127.0.0.1", DASHBOARD_PORT), DashboardHandler)
-    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
-    thread.start()
-    print(f"Dashboard: http://127.0.0.1:{DASHBOARD_PORT}", file=sys.stderr)
-
-
-async def main():
-    start_dashboard_server()
-    async with mcp.server.stdio.stdio_server() as (read_stream, write_stream):
+async def handle_sse(request):
+    async with sse.connect_sse(
+        request.scope, request.receive, request._send
+    ) as streams:
         await server.run(
-            read_stream,
-            write_stream,
-            server.create_initialization_options(),
+            streams[0], streams[1], server.create_initialization_options()
         )
 
 
+async def handle_messages(request):
+    await sse.handle_post_message(request.scope, request.receive, request._send)
+
+
+# --- Dashboard routes ---
+async def dashboard_html(request):
+    if not DASHBOARD_HTML_PATH.exists():
+        return HTMLResponse("dashboard.html not found", status_code=500)
+    return HTMLResponse(DASHBOARD_HTML_PATH.read_text(encoding="utf-8"))
+
+
+async def dashboard_stats(request):
+    registry = load_registry()
+    stats = load_stats()
+    install_counts: dict[str, int] = {}
+    for record in stats.get("installs", []):
+        name = record["module"]
+        install_counts[name] = install_counts.get(name, 0) + 1
+
+    modules = []
+    for entry in registry:
+        modules.append({
+            "name": entry["name"],
+            "type": entry["type"],
+            "lang": entry["lang"],
+            "summary": entry.get("summary", ""),
+            "tags": entry.get("tags", []),
+            "installs": install_counts.get(entry["name"], 0),
+        })
+
+    return JSONResponse({
+        "total_modules": len(registry),
+        "total_installs": len(stats.get("installs", [])),
+        "modules": modules,
+    })
+
+
+# --- Starlette app ---
+app = Starlette(
+    routes=[
+        Route("/sse", endpoint=handle_sse),
+        Route("/messages/", endpoint=handle_messages, methods=["POST"]),
+        Route("/", endpoint=dashboard_html),
+        Route("/api/stats", endpoint=dashboard_stats),
+    ],
+)
+
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    print(f"MCP SSE server: http://127.0.0.1:{MCP_PORT}/sse", file=sys.stderr)
+    print(f"Dashboard:      http://127.0.0.1:{MCP_PORT}/", file=sys.stderr)
+    uvicorn.run(app, host="127.0.0.1", port=MCP_PORT, log_level="warning")
