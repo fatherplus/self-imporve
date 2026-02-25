@@ -10,14 +10,15 @@
 
 在 opencode 配置中添加 MCP server，让 agent 能调用模块检索工具。
 
-编辑 `~/.config/opencode/opencode.json`，添加 `mcpServers` 字段：
+编辑 `~/.config/opencode/opencode.json`，添加 `mcp` 字段：
 
 ```json
 {
-  "mcpServers": {
+  "mcp": {
     "self-improve-modules": {
-      "command": "python",
-      "args": ["/path/to/self-imporve/mcp-server/server.py"]
+      "type": "local",
+      "command": ["python", "/path/to/self-imporve/mcp-server/server.py"],
+      "enabled": true
     }
   }
 }

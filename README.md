@@ -83,10 +83,11 @@ pip install mcp
 
 ```json
 {
-  "mcpServers": {
+  "mcp": {
     "self-improve-modules": {
-      "command": "python",
-      "args": ["/你的路径/self-improve/mcp-server/server.py"]
+      "type": "local",
+      "command": ["python", "/你的路径/self-improve/mcp-server/server.py"],
+      "enabled": true
     }
   }
 }
