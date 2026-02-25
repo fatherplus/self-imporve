@@ -25,7 +25,24 @@ argument-hint: <可选：主题描述>
 | devops | 部署、CI/CD、Docker 相关 |
 | general | 跨语言通用经验 |
 
-**第三步：生成 SKILL.md 草稿**
+**第三步：去重检查（强制）**
+
+在生成 SKILL.md 之前，必须检查知识库中是否已有功能重叠的 skill：
+
+1. 列出 `__REPO_PATH__/skills/` 下所有已有 skill 目录
+2. 读取每个 SKILL.md 的 frontmatter（name、description），与待蒸馏经验做对比
+
+根据检查结果决定下一步：
+
+| 情况 | 处理方式 |
+|------|----------|
+| 无重叠 | 继续第四步，创建新 skill |
+| 有相似 skill，但新经验补充了不同角度 | 告知用户已有 `<skill名>`，说明差异，由用户决定：创建新 skill / 合并到已有 skill / 放弃蒸馏 |
+| 有相似 skill，经验高度重叠 | 告知用户已有 `<skill名>` 且内容重叠，建议更新已有 skill 而非新建，由用户决定 |
+
+> ⚠️ 不要跳过此步骤。Skill 的 description 会注入 system prompt，重复 skill 直接导致上下文污染。
+
+**第四步：生成 SKILL.md 草稿**
 
 展示给用户确认，格式：
 
@@ -47,7 +64,7 @@ description: Use when <触发条件，不描述内容>
 <踩坑点>
 ```
 
-**第四步：写入知识库**
+**第五步：写入知识库**
 
 确认后执行：
 1. 写入 `__REPO_PATH__/skills/<category>/<skill-name>/SKILL.md`
