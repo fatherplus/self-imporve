@@ -55,7 +55,7 @@ self-improve/
 │   └── blueprints/        # 架构模板
 ├── mcp-server/            # 模块检索 MCP 服务
 │   └── server.py
-└── scripts/
+└── commands/
     ├── sync.sh            # 一键注册到 opencode
     ├── register.py        # 注册模块到 registry
     ├── distill-skill.md   # /distill-skill 命令
@@ -96,7 +96,7 @@ pip install mcp
 ### 4. 一键同步到 OpenCode
 
 ```bash
-bash scripts/sync.sh
+bash commands/sync.sh
 ```
 
 这会自动完成：
@@ -155,7 +155,7 @@ agent：（自动调用 search_modules("http")）
 1. Fork 本仓库
 2. 在 `modules/<type>/<lang>/<name>/` 下创建模块目录（所有类型统一包含 lang 层，跨语言模板用 `shared`）
 3. 编写 `manifest.json` + `src/` 源码
-4. 运行 `python scripts/register.py <模块路径>` 注册
+4. 运行 `python commands/register.py <模块路径>` 注册
 5. 提交 PR
 
 ### Manifest 规范

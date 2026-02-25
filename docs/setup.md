@@ -32,7 +32,7 @@
 
 ```bash
 cd /path/to/self-imporve
-bash scripts/sync.sh
+bash commands/sync.sh
 ```
 
 同步后 skills 出现在 `~/.config/opencode/skills/self-improve/` 下，
@@ -44,7 +44,7 @@ opencode 启动时自动发现并加载 description 到 system prompt。
 
 ```bash
 cd /path/to/self-imporve
-bash scripts/sync.sh
+bash commands/sync.sh
 ```
 
 同步后可用的命令：
@@ -73,5 +73,5 @@ git push
 ```bash
 cd /path/to/self-imporve
 git pull
-bash scripts/sync.sh
+bash commands/sync.sh
 ```
