@@ -75,10 +75,23 @@ cd self-improve
 ### 2. 安装 MCP 依赖
 
 ```bash
-pip install mcp
+cd mcp-server
+pip install -r requirements.txt
 ```
 
-### 3. 注册 MCP Server
+### 3. 启动 MCP Server
+
+MCP Server 通过 SSE（Server-Sent Events）方式提供服务，需要先启动：
+
+```bash
+python /你的路径/self-improve/mcp-server/server.py
+```
+
+启动后会在 `http://127.0.0.1:9475` 提供服务：
+- SSE 端点：`http://127.0.0.1:9475/sse`
+- Dashboard：`http://127.0.0.1:9475/`（查看模块统计和安装记录）
+
+### 4. 注册 MCP Server
 
 编辑 `~/.config/opencode/opencode.json`，添加：
 
@@ -86,15 +99,15 @@ pip install mcp
 {
   "mcp": {
     "self-improve-modules": {
-      "type": "local",
-      "command": ["python", "/你的路径/self-improve/mcp-server/server.py"],
+      "type": "remote",
+      "url": "http://127.0.0.1:9475/sse",
       "enabled": true
     }
   }
 }
 ```
 
-### 4. 一键同步到 OpenCode
+### 5. 一键同步到 OpenCode
 
 ```bash
 bash commands/sync.sh
@@ -188,7 +201,7 @@ agent：（自动调用 search_modules("http")）
 
 ## 技术栈
 
-- **MCP Server**: Python，通过 stdio 与 agent 通信
+- **MCP Server**: Python，通过 SSE（Server-Sent Events）与 agent 通信，内置 Dashboard
 - **Skills**: Markdown + YAML frontmatter，OpenCode 原生 skill 机制
 - **Commands**: OpenCode slash command 格式
 - **管理**: Git 版本控制，bash 脚本一键同步

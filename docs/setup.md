@@ -4,9 +4,29 @@
 
 - OpenCode + oh-my-opencode 已安装
 - Python 3.11+
-- `pip install mcp`
 
-## 1. 注册 MCP Server
+## 1. 安装 MCP 依赖
+
+```bash
+cd /path/to/self-imporve/mcp-server
+pip install -r requirements.txt
+```
+
+## 2. 启动 MCP Server
+
+MCP Server 通过 SSE（Server-Sent Events）方式提供服务，需要先启动：
+
+```bash
+python /path/to/self-imporve/mcp-server/server.py
+```
+
+启动后服务地址：
+- SSE 端点：`http://127.0.0.1:9475/sse`
+- Dashboard：`http://127.0.0.1:9475/`（查看模块统计）
+
+> 建议使用 systemd、supervisor 或 tmux 等方式保持 MCP Server 后台运行。
+
+## 3. 注册 MCP Server
 
 在 opencode 配置中添加 MCP server，让 agent 能调用模块检索工具。
 
@@ -16,17 +36,15 @@
 {
   "mcp": {
     "self-improve-modules": {
-      "type": "local",
-      "command": ["python", "/path/to/self-imporve/mcp-server/server.py"],
+      "type": "remote",
+      "url": "http://127.0.0.1:9475/sse",
       "enabled": true
     }
   }
 }
 ```
 
-将 `/path/to/self-imporve` 替换为仓库实际路径。
-
-## 2. 同步 Skills
+## 4. 同步 Skills
 
 运行同步脚本，将 skills 链接到 opencode skills 目录：
 
@@ -38,7 +56,7 @@ bash commands/sync.sh
 同步后 skills 出现在 `~/.config/opencode/skills/self-improve/` 下，
 opencode 启动时自动发现并加载 description 到 system prompt。
 
-## 3. 一键同步（Skills + Commands）
+## 5. 一键同步（Skills + Commands）
 
 运行同步脚本会自动完成 AGENTS.md 注入、Skills 链接、Commands 链接：
 
@@ -52,7 +70,7 @@ bash commands/sync.sh
 - `/distill-skill` — 蒸馏对话经验为 skill
 - `/distill-module` — 蒸馏代码为 module
 
-## 4. Git 版本管理
+## 6. Git 版本管理
 
 ```bash
 cd /path/to/self-imporve
