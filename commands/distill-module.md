@@ -53,10 +53,9 @@ blueprint 额外需要 `design_decisions` 数组。
 
 3. 注册到 registry：
    ```bash
-   python __REPO_PATH__/scripts/register.py modules/<type>/<lang>/<name>
+    python __REPO_PATH__/commands/register.py modules/<type>/<lang>/<name>
    ```
 
-4. git add + commit
 
 ## tags 设计原则
 

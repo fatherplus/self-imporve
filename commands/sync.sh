@@ -69,7 +69,7 @@ echo ""
 echo "[4/4] 同步 Commands"
 mkdir -p "$COMMANDS_DST"
 cmd_count=0
-for cmd_file in "$REPO_DIR/scripts"/distill-*.md; do
+for cmd_file in "$REPO_DIR/commands"/*.md; do
     [ -f "$cmd_file" ] || continue
     cmd_name=$(basename "$cmd_file")
     ln -sf "$cmd_file" "$COMMANDS_DST/$cmd_name"

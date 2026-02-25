@@ -2,7 +2,7 @@
 """
 注册模块到 registry.json
 
-用法: python scripts/register.py modules/utilities/python/http-client
+用法: python commands/register.py modules/utilities/python/http-client
 """
 
 import json
@@ -61,7 +61,7 @@ def register(module_path: str) -> None:
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("用法: python scripts/register.py <module_path>")
-        print("示例: python scripts/register.py modules/utilities/python/http-client")
+        print("用法: python commands/register.py <module_path>")
+        print("示例: python commands/register.py modules/utilities/python/http-client")
         sys.exit(1)
     register(sys.argv[1])

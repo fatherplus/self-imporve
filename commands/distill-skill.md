@@ -51,7 +51,7 @@ description: Use when <触发条件，不描述内容>
 
 确认后执行：
 1. 写入 `__REPO_PATH__/skills/<category>/<skill-name>/SKILL.md`
-2. 运行 `bash __REPO_PATH__/scripts/sync.sh` 同步到 opencode
+2. 运行 `bash __REPO_PATH__/commands/sync.sh` 同步到 opencode
 3. git add + commit
 
 ## 不值得蒸馏的内容
