@@ -24,10 +24,11 @@
 | component | 多文件业务模块 | install 后按 adapt_points 适配 |
 | blueprint | 项目架构模板 | 不安装，用 get_module_api 查看架构指导后按蓝图生成 |
 
-## 蒸馏命令
+## 常用命令
 
-对话结束时，用户可能使用以下命令将经验沉淀到知识库：
+对话中，用户可能使用以下命令：
 
+- `/commit` — 使用 git-master skill 对当前仓库执行规范 commit
 - `/distill-skill` — 提炼可复用的经验为 skill，写入知识库仓库
 - `/distill-module` — 提炼可复用的代码为 module，注册到知识库仓库
 

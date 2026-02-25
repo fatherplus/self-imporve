@@ -58,6 +58,7 @@ self-improve/
 └── commands/
     ├── sync.sh            # 一键注册到 opencode
     ├── register.py        # 注册模块到 registry
+    ├── commit.md          # /commit 命令
     ├── distill-skill.md   # /distill-skill 命令
     └── distill-module.md  # /distill-module 命令
 ```
@@ -102,9 +103,17 @@ bash commands/sync.sh
 这会自动完成：
 - 注入 AGENTS.md 到 opencode 全局配置（动态写入仓库绝对路径）
 - 链接所有 skills 到 opencode skills 目录
-- 链接 `/distill-skill` 和 `/distill-module` 命令
+- 链接所有 commands（`/commit`、`/distill-skill`、`/distill-module`）
 
 ## 日常使用
+
+### 提交代码
+
+```
+/commit
+```
+
+agent 会加载 git-master skill，自动检测仓库 commit 风格，按原子拆分规则执行规范的 commit。
 
 ### 蒸馏经验
 

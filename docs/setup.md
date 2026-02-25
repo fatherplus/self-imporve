@@ -48,6 +48,7 @@ bash commands/sync.sh
 ```
 
 同步后可用的命令：
+- `/commit` — 使用 git-master skill 执行规范 commit
 - `/distill-skill` — 蒸馏对话经验为 skill
 - `/distill-module` — 蒸馏代码为 module
 
