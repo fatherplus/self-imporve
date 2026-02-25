@@ -22,9 +22,10 @@ from starlette.applications import Starlette
 from starlette.responses import HTMLResponse, JSONResponse
 from starlette.routing import Route
 
-REGISTRY_PATH = Path(__file__).parent.parent / "registry.json"
-MODULES_ROOT = Path(__file__).parent.parent / "modules"
-STATS_PATH = Path(__file__).parent.parent / "stats.json"
+REPO_ROOT = Path(__file__).parent.parent
+REGISTRY_PATH = REPO_ROOT / "registry.json"
+MODULES_ROOT = REPO_ROOT / "modules"
+STATS_PATH = REPO_ROOT / "stats.json"
 
 server = Server("self-improve-modules")
 
@@ -66,7 +67,7 @@ def load_registry() -> list[dict[str, Any]]:
 
 def load_manifest(module_entry: dict[str, Any]) -> dict[str, Any] | None:
     """根据 registry 条目加载对应的 manifest.json"""
-    manifest_path = MODULES_ROOT / module_entry["path"] / "manifest.json"
+    manifest_path = REPO_ROOT / module_entry["path"] / "manifest.json"
     if not manifest_path.exists():
         return None
     return json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -74,8 +75,21 @@ def load_manifest(module_entry: dict[str, Any]) -> dict[str, Any] | None:
 
 def search(query: str) -> list[dict[str, Any]]:
     registry = load_registry()
-    query_lower = query.lower()
+    query_lower = query.strip().lower()
     keywords = query_lower.split()
+
+    # 空查询返回全部模块
+    if not keywords:
+        return [
+            {
+                "name": entry["name"],
+                "type": entry["type"],
+                "lang": entry["lang"],
+                "summary": entry["summary"],
+            }
+            for entry in registry
+        ]
+
     scored: list[tuple[int, dict]] = []
 
     for entry in registry:
@@ -243,7 +257,7 @@ def _handle_install(module_name: str, target_dir: str) -> list[types.TextContent
         return [types.TextContent(type="text", text=f"manifest.json 缺失")]
 
     # 源码目录
-    src_dir = MODULES_ROOT / entry["path"] / "src"
+    src_dir = REPO_ROOT / entry["path"] / "src"
     if not src_dir.exists():
         return [types.TextContent(type="text", text=f"源码目录不存在: {src_dir}")]
 
