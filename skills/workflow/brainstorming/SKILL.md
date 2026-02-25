@@ -15,6 +15,7 @@ Start by understanding the current project context, then ask questions one at a 
 
 **Understanding the idea:**
 - Check out the current project state first (files, docs, recent commits)
+- **调用 `search_modules` 检索知识库**，看是否有可复用的模块能加速实现（这是强制步骤，参见 AGENTS.md）
 - Ask questions one at a time to refine the idea
 - Prefer multiple choice questions when possible, but open-ended is fine too
 - Only one question per message - if a topic needs more exploration, break it into multiple questions
