@@ -1,0 +1,17 @@
+{
+  "name": "fullstack-fastapi-blueprint",
+  "type": "blueprint",
+  "lang": "shared",
+  "summary": "全栈 FastAPI 项目架构蓝图：FastAPI + SQLModel + React + TanStack + shadcn/ui + Docker Compose + Traefik + Alembic + CI/CD",
+  "tags": ["fullstack", "fastapi", "react", "docker", "traefik", "alembic", "blueprint", "architecture"],
+  "design_decisions": [
+    "SQLModel 作为 ORM：兼顾 Pydantic 数据验证和 SQLAlchemy ORM，模型定义一次即可用于 API 和数据库",
+    "TanStack Router 文件路由：基于文件系统的路由，类型安全，自动代码分割",
+    "shadcn/ui 组件库：非 npm 包，直接复制源码到项目中，完全可定制",
+    "Traefik 反向代理：自动 HTTPS 证书（Let's Encrypt），Docker 标签配置",
+    "OpenAPI 客户端自动生成：后端 schema 变更后自动生成前端 TypeScript 客户端",
+    "Docker Compose 编排：prestart 服务确保数据库就绪后再启动后端",
+    "Alembic 数据库迁移：自动检测模型变更生成迁移脚本",
+    "Pydantic Settings 配置管理：从 .env 文件加载，环境分级校验"
+  ]
+}

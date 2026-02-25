@@ -1,0 +1,15 @@
+{
+  "name": "fastapi-db-prestart",
+  "type": "utility",
+  "lang": "python",
+  "summary": "数据库预启动工具：tenacity 重试连接检查 + 种子数据初始化模式",
+  "tags": ["database", "prestart", "tenacity", "retry", "seed", "sqlmodel", "fastapi"],
+  "api": {
+    "wait_for_db(engine, max_tries, wait_seconds) -> None": "等待数据库就绪（带重试）",
+    "init_db(session, superuser_email, superuser_password, user_model, create_user_fn) -> None": "初始化种子数据（创建超级管理员）"
+  },
+  "install": {
+    "dependencies": ["tenacity>=8.2.3", "sqlmodel>=0.0.21"],
+    "entry": "from fastapi_db_prestart.prestart import wait_for_db, init_db"
+  }
+}

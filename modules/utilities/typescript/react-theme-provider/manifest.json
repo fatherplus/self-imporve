@@ -1,0 +1,16 @@
+{
+  "name": "react-theme-provider",
+  "type": "utility",
+  "lang": "typescript",
+  "summary": "React 暗色模式 Provider：支持 dark/light/system 三种模式、localStorage 持久化、media query 监听系统主题变化",
+  "tags": ["react", "theme", "dark-mode", "provider", "context", "tailwind"],
+  "api": {
+    "ThemeProvider": "React Context Provider 组件，props: children, defaultTheme?, storageKey?",
+    "useTheme()": "获取当前主题状态，返回 { theme, resolvedTheme, setTheme }",
+    "Theme": "类型: 'dark' | 'light' | 'system'"
+  },
+  "install": {
+    "dependencies": ["react"],
+    "entry": "import { ThemeProvider, useTheme } from './theme-provider'"
+  }
+}

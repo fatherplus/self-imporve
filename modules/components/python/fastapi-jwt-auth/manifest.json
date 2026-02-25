@@ -1,0 +1,37 @@
+{
+  "name": "fastapi-jwt-auth",
+  "type": "component",
+  "lang": "python",
+  "summary": "FastAPI JWT 认证组件：密码哈希(Argon2+Bcrypt)、access token 生成/验证、FastAPI 依赖注入、防时序攻击认证",
+  "tags": ["fastapi", "jwt", "auth", "argon2", "bcrypt", "oauth2", "password-hash"],
+  "api": {
+    "security": {
+      "create_access_token(subject, expires_delta) -> str": "生成 JWT access token",
+      "verify_password(plain, hashed) -> tuple[bool, str|None]": "验证密码，返回 (是否匹配, 更新后的hash)",
+      "get_password_hash(password) -> str": "生成密码哈希"
+    },
+    "deps": {
+      "get_db() -> Generator[Session]": "数据库 session 依赖",
+      "get_current_user(session, token) -> User": "从 JWT 获取当前用户",
+      "get_current_active_superuser(current_user) -> User": "验证超级管理员权限",
+      "SessionDep": "Annotated Session 依赖类型",
+      "CurrentUser": "Annotated User 依赖类型"
+    },
+    "auth": {
+      "authenticate(session, email, password) -> User|None": "认证用户（含防时序攻击）",
+      "generate_password_reset_token(email, secret_key, algorithm, expire_hours) -> str": "生成密码重置 token",
+      "verify_password_reset_token(token, secret_key, algorithm) -> str|None": "验证密码重置 token"
+    }
+  },
+  "install": {
+    "dependencies": ["pyjwt>=2.8.0", "pwdlib[argon2,bcrypt]>=0.3.0", "fastapi>=0.114.2", "sqlmodel>=0.0.21"],
+    "entry": "from fastapi_jwt_auth.security import create_access_token, verify_password, get_password_hash"
+  },
+  "adapt_points": [
+    "SECRET_KEY: 传入你的密钥字符串",
+    "ALGORITHM: JWT 算法，默认 HS256",
+    "token_expire_minutes: token 过期时间",
+    "database_engine: SQLAlchemy engine 实例",
+    "User model: 替换为你的用户模型"
+  ]
+}

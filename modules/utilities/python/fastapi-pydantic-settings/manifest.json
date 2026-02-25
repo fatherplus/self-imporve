@@ -1,0 +1,15 @@
+{
+  "name": "fastapi-pydantic-settings",
+  "type": "utility",
+  "lang": "python",
+  "summary": "FastAPI Pydantic Settings 配置模式：CORS 解析、环境分级校验、computed_field、密钥安全检查",
+  "tags": ["fastapi", "pydantic", "settings", "config", "cors", "environment"],
+  "api": {
+    "parse_cors(v) -> list[str] | str": "解析 CORS 配置（逗号分隔字符串或列表）",
+    "Settings(BaseSettings)": "配置类模板，含 computed_field、model_validator、密钥安全检查"
+  },
+  "install": {
+    "dependencies": ["pydantic-settings>=2.2.1", "pydantic>2.0"],
+    "entry": "from fastapi_pydantic_settings.config import Settings"
+  }
+}

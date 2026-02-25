@@ -1,0 +1,19 @@
+{
+  "name": "react-datatable",
+  "type": "component",
+  "lang": "typescript",
+  "summary": "React 通用数据表格组件：基于 TanStack Table + shadcn/ui，支持分页、行数选择、空状态、响应式",
+  "tags": ["react", "table", "datatable", "tanstack-table", "pagination", "shadcn"],
+  "api": {
+    "DataTable<TData, TValue>": "泛型数据表格组件，props: { columns: ColumnDef[], data: TData[] }",
+    "特性": "分页导航、行数选择(5/10/25/50)、空状态提示、页码显示"
+  },
+  "install": {
+    "dependencies": ["@tanstack/react-table", "lucide-react"],
+    "entry": "import { DataTable } from './components/Common/DataTable'"
+  },
+  "adapt_points": [
+    "ui_components: 需要 shadcn/ui 的 Button, Select, Table 组件",
+    "样式: 基于 Tailwind CSS，可按需调整"
+  ]
+}

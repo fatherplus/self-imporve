@@ -1,0 +1,25 @@
+{
+  "name": "react-jwt-auth-hook",
+  "type": "component",
+  "lang": "typescript",
+  "summary": "React JWT 认证 hook：login/signup mutation、token 管理、401 自动登出、TanStack Query 集成",
+  "tags": ["react", "jwt", "auth", "tanstack-query", "hook", "login", "token"],
+  "api": {
+    "useAuth()": "认证 hook，返回 { loginMutation, signUpMutation, logout, user }",
+    "isLoggedIn() -> boolean": "检查是否已登录（localStorage token）",
+    "handleError(err)": "API 错误提取和 toast 显示",
+    "setupAuthErrorHandler(queryClient)": "配置 QueryClient 全局 401/403 错误处理"
+  },
+  "install": {
+    "dependencies": ["@tanstack/react-query", "@tanstack/react-router", "axios"],
+    "entry": "import useAuth, { isLoggedIn } from './hooks/useAuth'"
+  },
+  "adapt_points": [
+    "loginService: 替换为你的登录 API 调用",
+    "userService: 替换为你的获取当前用户 API",
+    "signupService: 替换为你的注册 API",
+    "tokenStorageKey: localStorage key，默认 'access_token'",
+    "loginRedirectPath: 登录后跳转路径",
+    "toast 实现: 替换为你的 toast 库"
+  ]
+}

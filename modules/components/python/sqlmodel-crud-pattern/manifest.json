@@ -1,0 +1,32 @@
+{
+  "name": "sqlmodel-crud-pattern",
+  "type": "component",
+  "lang": "python",
+  "summary": "SQLModel CRUD 模式：Base/Create/Update/Public 四层模型分离、通用 CRUD 函数、分页查询",
+  "tags": ["sqlmodel", "crud", "orm", "pydantic", "fastapi", "pagination"],
+  "api": {
+    "models": {
+      "EntityBase(SQLModel)": "基础字段定义（共享属性）",
+      "EntityCreate(EntityBase)": "创建时的输入模型",
+      "EntityUpdate(EntityBase)": "更新时的输入模型（字段可选）",
+      "Entity(EntityBase, table=True)": "数据库表模型（含 id, created_at）",
+      "EntityPublic(EntityBase)": "API 返回模型",
+      "EntitiesPublic(SQLModel)": "分页列表返回模型（data + count）"
+    },
+    "crud": {
+      "create_entity(session, entity_create, model_class) -> Entity": "创建实体",
+      "update_entity(session, db_entity, entity_update) -> Entity": "更新实体（exclude_unset）",
+      "get_entity_by_field(session, model_class, field_name, value) -> Entity|None": "按字段查询",
+      "list_entities(session, model_class, skip, limit, filter_field, filter_value) -> tuple[list, int]": "分页列表查询"
+    }
+  },
+  "install": {
+    "dependencies": ["sqlmodel>=0.0.21"],
+    "entry": "from sqlmodel_crud_pattern.crud import create_entity, update_entity, list_entities"
+  },
+  "adapt_points": [
+    "Entity 模型: 替换为你的业务模型",
+    "字段定义: 根据业务需求修改 Base 中的字段",
+    "关系: 添加 Relationship 定义"
+  ]
+}

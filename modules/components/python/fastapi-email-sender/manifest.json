@@ -1,0 +1,22 @@
+{
+  "name": "fastapi-email-sender",
+  "type": "component",
+  "lang": "python",
+  "summary": "SMTP 邮件发送组件：Jinja2 模板渲染、TLS/SSL 支持、可配置 SMTP",
+  "tags": ["email", "smtp", "jinja2", "fastapi", "template"],
+  "api": {
+    "EmailData": "dataclass，包含 html_content 和 subject",
+    "render_email_template(template_name, context, templates_dir) -> str": "渲染 Jinja2 邮件模板",
+    "send_email(email_to, subject, html_content, smtp_config) -> None": "发送邮件",
+    "SmtpConfig": "dataclass，SMTP 配置（host, port, user, password, tls, ssl, from_email, from_name）"
+  },
+  "install": {
+    "dependencies": ["emails>=0.6", "jinja2>=3.1.4"],
+    "entry": "from fastapi_email_sender.email import send_email, render_email_template, EmailData"
+  },
+  "adapt_points": [
+    "smtp_config: 传入你的 SMTP 配置",
+    "templates_dir: 邮件模板目录路径",
+    "邮件模板: 在 templates_dir 下创建 HTML 模板文件"
+  ]
+}
