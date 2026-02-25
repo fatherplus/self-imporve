@@ -13,7 +13,7 @@ echo "仓库路径: $REPO_DIR"
 echo ""
 
 # 1. 注入 AGENTS.md（动态替换 __REPO_PATH__ 为实际路径）
-echo "[1/3] 注入 AGENTS.md"
+echo "[1/4] 注入 AGENTS.md"
 
 # 生成我们的内容（替换 __REPO_PATH__）
 sed "s|__REPO_PATH__|$REPO_DIR|g" "$AGENTS_SRC" > "$AGENTS_DST.tmp"
@@ -37,7 +37,17 @@ fi
 echo "  ✅ $AGENTS_DST"
 
 echo ""
-echo "[2/3] 同步 Skills"
+echo "[2/4] 清理旧的 superpowers 符号链接"
+SUPERPOWERS_DST="$OPENCODE_DIR/skills/superpowers"
+if [ -d "$SUPERPOWERS_DST" ]; then
+    rm -rf "$SUPERPOWERS_DST"
+    echo "  ✅ 已删除 $SUPERPOWERS_DST"
+else
+    echo "  ⏭️  不存在，跳过"
+fi
+
+echo ""
+echo "[3/4] 同步 Skills"
 mkdir -p "$SKILLS_DST"
 find "$SKILLS_DST" -maxdepth 1 -type l -delete
 skill_count=0
@@ -56,7 +66,7 @@ done
 echo "  共 $skill_count 个 skills"
 
 echo ""
-echo "[3/3] 同步 Commands"
+echo "[4/4] 同步 Commands"
 mkdir -p "$COMMANDS_DST"
 cmd_count=0
 for cmd_file in "$REPO_DIR/scripts"/distill-*.md; do
