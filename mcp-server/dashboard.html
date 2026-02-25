@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Self-Improve Module Dashboard</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #0f1117;
+  color: #e1e4e8;
+  min-height: 100vh;
+  padding: 2rem;
+}
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.header h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #f0f6fc;
+  margin-bottom: 0.3rem;
+}
+.header p {
+  color: #8b949e;
+  font-size: 0.9rem;
+}
+.stats-cards {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+}
+.card {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  padding: 1.5rem 2.5rem;
+  text-align: center;
+  min-width: 180px;
+}
+.card .number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #58a6ff;
+  line-height: 1;
+}
+.card .label {
+  color: #8b949e;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+.card:nth-child(2) .number { color: #3fb950; }
+.section {
+  max-width: 960px;
+  margin: 0 auto 2.5rem;
+}
+.section h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #f0f6fc;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #21262d;
+}
+.chart-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.chart-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.chart-row .name {
+  width: 180px;
+  text-align: right;
+  font-size: 0.85rem;
+  color: #c9d1d9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chart-row .bar-wrap {
+  flex: 1;
+  background: #21262d;
+  border-radius: 4px;
+  height: 24px;
+  overflow: hidden;
+}
+.chart-row .bar {
+  height: 100%;
+  background: linear-gradient(90deg, #58a6ff, #388bfd);
+  border-radius: 4px;
+  min-width: 2px;
+  transition: width 0.6s ease;
+}
+.chart-row .count {
+  width: 40px;
+  font-size: 0.85rem;
+  color: #8b949e;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #21262d;
+  font-size: 0.85rem;
+}
+th {
+  color: #8b949e;
+  font-weight: 500;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+td { color: #c9d1d9; }
+tr:hover td { background: #161b22; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.badge-utility { background: #1f3a5f; color: #58a6ff; }
+.badge-component { background: #1a3a2a; color: #3fb950; }
+.badge-blueprint { background: #3d2e00; color: #d29922; }
+.tag {
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
+  background: #21262d;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  color: #8b949e;
+  margin: 0.1rem;
+}
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #484f58;
+}
+.empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+.empty-state p { font-size: 0.95rem; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Self-Improve Modules</h1>
+  <p>模块注册表 & 安装统计</p>
+</div>
+
+<div class="stats-cards">
+  <div class="card">
+    <div class="number" id="total-modules">-</div>
+    <div class="label">模块总数</div>
+  </div>
+  <div class="card">
+    <div class="number" id="total-installs">-</div>
+    <div class="label">总安装次数</div>
+  </div>
+</div>
+
+<div class="section" id="chart-section" style="display:none">
+  <h2>安装次数</h2>
+  <div class="chart-container" id="chart"></div>
+</div>
+
+<div class="section">
+  <h2>模块列表</h2>
+  <div id="table-wrap"></div>
+</div>
+
+<script>
+async function load() {
+  try {
+    const res = await fetch('/api/stats');
+    const data = await res.json();
+    render(data);
+  } catch (e) {
+    document.getElementById('table-wrap').innerHTML =
+      '<div class="empty-state"><div class="icon">⚠️</div><p>无法加载数据</p></div>';
+  }
+}
+
+function render(data) {
+  document.getElementById('total-modules').textContent = data.total_modules;
+  document.getElementById('total-installs').textContent = data.total_installs;
+
+  if (data.modules.length === 0) {
+    document.getElementById('table-wrap').innerHTML =
+      '<div class="empty-state"><div class="icon">📦</div><p>还没有注册任何模块，使用 /distill-module 开始沉淀代码吧</p></div>';
+    return;
+  }
+
+  renderChart(data.modules);
+  renderTable(data.modules);
+}
+
+function renderChart(modules) {
+  const withInstalls = modules.filter(m => m.installs > 0);
+  if (withInstalls.length === 0) return;
+
+  const section = document.getElementById('chart-section');
+  section.style.display = '';
+  const container = document.getElementById('chart');
+  const max = Math.max(...withInstalls.map(m => m.installs));
+
+  container.innerHTML = withInstalls
+    .sort((a, b) => b.installs - a.installs)
+    .map(m => {
+      const pct = max > 0 ? (m.installs / max * 100) : 0;
+      return `<div class="chart-row">
+        <span class="name">${esc(m.name)}</span>
+        <div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div>
+        <span class="count">${m.installs}</span>
+      </div>`;
+    }).join('');
+}
+
+function renderTable(modules) {
+  const sorted = [...modules].sort((a, b) => b.installs - a.installs);
+  let html = `<table>
+    <thead><tr><th>名称</th><th>类型</th><th>语言</th><th>安装次数</th><th>标签</th></tr></thead>
+    <tbody>`;
+
+  for (const m of sorted) {
+    const badgeCls = 'badge-' + m.type;
+    const tags = m.tags.map(t => `<span class="tag">${esc(t)}</span>`).join(' ');
+    html += `<tr>
+      <td><strong>${esc(m.name)}</strong><br><small style="color:#8b949e">${esc(m.summary)}</small></td>
+      <td><span class="badge ${badgeCls}">${esc(m.type)}</span></td>
+      <td>${esc(m.lang)}</td>
+      <td>${m.installs}</td>
+      <td>${tags}</td>
+    </tr>`;
+  }
+
+  html += '</tbody></table>';
+  document.getElementById('table-wrap').innerHTML = html;
+}
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+load();
+</script>
+</body>
+</html>
