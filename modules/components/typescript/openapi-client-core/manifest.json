@@ -1,0 +1,34 @@
+{
+  "name": "openapi-client-core",
+  "type": "component",
+  "lang": "typescript",
+  "summary": "OpenAPI 客户端核心库，包含请求处理、错误处理、可取消 Promise 和拦截器支持",
+  "tags": ["openapi", "http-client", "axios", "api", "cancelable-promise", "interceptors"],
+  "api": {
+    "错误处理": {
+      "ApiError": "自定义 API 错误类，包含 status、statusText、body、request 信息"
+    },
+    "请求配置": {
+      "OpenAPI": "全局 OpenAPI 配置对象，包含 BASE URL、TOKEN、拦截器等",
+      "Interceptors<T>": "请求/响应拦截器管理类"
+    },
+    "请求执行": {
+      "request(config, options)": "核心请求函数，基于 axios 发送 HTTP 请求",
+      "CancelablePromise<T>": "可取消的 Promise 实现"
+    },
+    "类型定义": {
+      "ApiRequestOptions": "请求选项类型（method, url, body, headers 等）",
+      "ApiResult": "请求结果类型（url, ok, status, statusText, body）",
+      "OpenAPIConfig": "OpenAPI 配置类型"
+    }
+  },
+  "install": {
+    "dependencies": ["axios"],
+    "entry": "import { ApiError, CancelablePromise, OpenAPI, request } from './openapi-client-core'"
+  },
+  "adapt_points": [
+    "OpenAPI.BASE: 设置 API 基础 URL",
+    "OpenAPI.TOKEN: 配置认证 token（支持字符串或异步函数）",
+    "OpenAPI.interceptors: 添加请求/响应拦截器"
+  ]
+}
