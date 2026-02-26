@@ -1,0 +1,16 @@
+{
+  "name": "use-copy-to-clipboard",
+  "type": "utility",
+  "lang": "typescript",
+  "summary": "React hook for copying text to clipboard with state management and configurable timeout reset",
+  "tags": ["clipboard", "copy", "react-hook", "browser-api"],
+  "api": {
+    "hooks": {
+      "useCopyToClipboard(timeout?: number): [CopiedValue, CopyFn]": "复制文本到剪贴板，返回已复制值和复制函数，超时后自动重置状态"
+    }
+  },
+  "install": {
+    "dependencies": ["react"],
+    "entry": "import { useCopyToClipboard } from './useCopyToClipboard'"
+  }
+}
