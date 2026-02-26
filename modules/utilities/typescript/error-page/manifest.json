@@ -1,0 +1,19 @@
+{
+  "name": "error-page",
+  "type": "utility",
+  "lang": "typescript",
+  "summary": "React 通用错误页面组件，支持自定义标题、描述和返回链接，基于 TanStack Router + shadcn/ui",
+  "tags": ["error-page", "404", "error-boundary", "react", "shadcn-ui"],
+  "api": {
+    "components": {
+      "ErrorComponent({ title?, description?, homeUrl?, buttonText? })": "通用错误页面展示组件，支持自定义文案和返回链接"
+    }
+  },
+  "install": {
+    "dependencies": ["@tanstack/react-router"],
+    "entry": "import ErrorComponent from './error-page'"
+  },
+  "adapt_points": [
+    "Button 组件 import 路径：需要调整为项目中 shadcn/ui Button 的实际路径（当前为 @/components/ui/button）"
+  ]
+}
