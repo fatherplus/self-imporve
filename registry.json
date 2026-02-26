@@ -139,6 +139,61 @@
         "architecture"
       ],
       "path": "modules/blueprints/shared/fullstack-fastapi-blueprint"
+    },
+    {
+      "name": "error-page",
+      "type": "utility",
+      "lang": "typescript",
+      "summary": "React 通用错误页面组件，支持自定义标题、描述和返回链接，基于 TanStack Router + shadcn/ui",
+      "tags": [
+        "error-page",
+        "404",
+        "error-boundary",
+        "react",
+        "shadcn-ui"
+      ],
+      "path": "modules/utilities/typescript/error-page"
+    },
+    {
+      "name": "use-copy-to-clipboard",
+      "type": "utility",
+      "lang": "typescript",
+      "summary": "React hook for copying text to clipboard with state management and configurable timeout reset",
+      "tags": [
+        "clipboard",
+        "copy",
+        "react-hook",
+        "browser-api"
+      ],
+      "path": "modules/utilities/typescript/use-copy-to-clipboard"
+    },
+    {
+      "name": "use-is-mobile",
+      "type": "utility",
+      "lang": "typescript",
+      "summary": "React hook for detecting mobile viewport using matchMedia with configurable breakpoint",
+      "tags": [
+        "responsive",
+        "mobile-detection",
+        "media-query",
+        "react-hook"
+      ],
+      "path": "modules/utilities/typescript/use-is-mobile"
+    },
+    {
+      "name": "openapi-client-core",
+      "type": "component",
+      "lang": "typescript",
+      "summary": "OpenAPI 客户端核心库，包含请求处理、错误处理、可取消 Promise 和拦截器支持",
+      "tags": [
+        "openapi",
+        "http-client",
+        "axios",
+        "api",
+        "cancelable-promise",
+        "interceptors"
+      ],
+      "path": "modules/components/typescript/openapi-client-core"
     }
   ]
 }
