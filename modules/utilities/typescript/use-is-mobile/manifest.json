@@ -1,0 +1,16 @@
+{
+  "name": "use-is-mobile",
+  "type": "utility",
+  "lang": "typescript",
+  "summary": "React hook for detecting mobile viewport using matchMedia with configurable breakpoint",
+  "tags": ["responsive", "mobile-detection", "media-query", "react-hook"],
+  "api": {
+    "hooks": {
+      "useIsMobile(breakpoint?: number): boolean": "检测当前视口是否为移动端，支持自定义断点（默认 768px）"
+    }
+  },
+  "install": {
+    "dependencies": ["react"],
+    "entry": "import { useIsMobile } from './useMobile'"
+  }
+}
